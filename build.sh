@@ -13,6 +13,7 @@ WIN32_CROSS_PREFIX="x86_64-w64-mingw32"
 # Linux
 LINUX_WORKDIR="$WORK_DIR/x86_64-linux-gnu"
 LINUX_ROOTFS="$BASE_DIR/rootfs-linux"
+PATCH_DIR="$BASE_DIR/lcevc_dec_patches"
 
 test_sha256() {
     local local_path=$1
@@ -23,6 +24,20 @@ test_sha256() {
     if [[ $real_hash -ne $expected_hash ]]; then
         echo "Invalid hash"
         exit 1
+    fi
+}
+
+apply_patches() {
+    local patch_dir=$1
+    local target_dir=$2
+
+    if [ -d "$patch_dir" ]; then
+        echo "Applying patches from $patch_dir"
+        for patch in "$patch_dir"/*.diff; do
+            [ -f "$patch" ] || continue
+            echo "Applying patch $patch"
+            patch -p1 -d "$target_dir" < "$patch"
+        done
     fi
 }
 
@@ -173,6 +188,8 @@ build_decoder() {
 
     git clone https://github.com/v-novaltd/LCEVCdec.git --branch 3.3.3 "$LINUX_WORKDIR/LCEVCdec"
     cd "$LINUX_WORKDIR/LCEVCdec"
+
+    apply_patches "$PATCH_DIR" "$LINUX_WORKDIR/LCEVCdec"
 
     mkdir build && cd build
 

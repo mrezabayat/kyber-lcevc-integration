@@ -1,0 +1,12 @@
+diff --git a/src/api/src/decoder_config.cpp b/src/api/src/decoder_config.cpp
+index acd2572e..396323a7 100644
+--- a/src/api/src/decoder_config.cpp
++++ b/src/api/src/decoder_config.cpp
+@@ -252,6 +252,7 @@ void DecoderConfig::initialiseCoreConfig(perseus_decoder_config& cfgOut) const
+     cfgOut.apply_cmdbuffers_internal = m_generateCmdbuffers;
+     cfgOut.use_parallel_decode = m_coreParallelDecode;
+     cfgOut.pipeline_mode = (m_highPrecision ? PPM_PRECISION : PPM_SPEED);
++    cfgOut.dump_surfaces = 1;
+ 
+     // Settings where negative means "don't set/auto"
+     if (m_coreDecoderNumThreads != -1) {
